@@ -4,12 +4,13 @@ import { StatusBar } from 'expo-status-bar';
 import { Pressable, StyleSheet, View } from 'react-native';
 import { Button, IconButton, Text } from 'react-native-paper';
 
+
 const Stack = createNativeStackNavigator();
 
 export default function App() {
   return (
     <NavigationContainer>
-      <Stack.Navigator>
+      <Stack.Navigator screenOptions={{headerStyle: {backgroundColor: '#8a6fdf'}}}>
         <Stack.Screen name={'Locations'} component={Locations}/>
         <Stack.Screen name={'Add location'} component={AddLocation}/>
         <Stack.Screen name={'Map view'} component={MapView}/>
@@ -34,8 +35,7 @@ function AddLocation(){
 
   return(
     <View>
-      <IconButton icon={'home'} size={52} onPress={()=> navigation.navigate('Locations')}/>
-        <Button onPress={() => navigation.navigate('Map view')}> Map view</Button>
+        <Button onPress={() => navigation.navigate('Map view')}>Map view</Button>
     </View>
   )
 }

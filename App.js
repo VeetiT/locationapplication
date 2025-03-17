@@ -5,7 +5,7 @@ import { Pressable, StyleSheet, View } from 'react-native';
 import { Button, IconButton, Text } from 'react-native-paper';
 import { Locations } from './components/Locations';
 import { AddLocation } from './components/AddLocation';
-import { MapView } from './components/MapView';
+import { ViewMap } from './components/MapView';
 
 
 const Stack = createNativeStackNavigator();
@@ -14,11 +14,8 @@ export default function App() {
   return (
     <NavigationContainer>
       <Stack.Navigator screenOptions={{headerStyle: {backgroundColor: '#8a6fdf'}}}>
-        <Stack.Screen name={'Locations'} component={Locations}/>
-        <Stack.Screen name={'Add location'} component={AddLocation}/>
-        <Stack.Screen name={'Map view'} component={MapView}/>
+        <Stack.Screen name={'Map view'} component={ViewMap}/>
       </Stack.Navigator>
     </NavigationContainer>
   );
-}
-
+} 

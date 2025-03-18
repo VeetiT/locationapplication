@@ -8,12 +8,15 @@ import { AddLocation } from './components/AddLocation';
 import { ViewMap } from './components/MapView';
 
 
+
 const Stack = createNativeStackNavigator();
 
 export default function App() {
   return (
     <NavigationContainer>
       <Stack.Navigator screenOptions={{headerStyle: {backgroundColor: '#8a6fdf'}}}>
+        {/*<Stack.Screen name={'Locations'} component={Locations}/>*/}
+        {/*<Stack.Screen name={'Add Location'} component={AddLocation}/>*/}
         <Stack.Screen name={'Map view'} component={ViewMap}/>
       </Stack.Navigator>
     </NavigationContainer>

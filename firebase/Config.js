@@ -10,7 +10,6 @@ const firebaseConfig = {
   appId: process.env.EXPO_PUBLIC_APP_ID
 };
 
-// Initialize Firebase
 const app = initializeApp(firebaseConfig);
 
 export const db = getFirestore(app)

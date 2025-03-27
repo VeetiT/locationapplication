@@ -6,19 +6,47 @@ import { Button, IconButton, Text } from 'react-native-paper';
 import { Locations } from './components/Locations';
 import { AddLocation } from './components/AddLocation';
 import { ViewMap } from './components/MapView';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import AntDesign from 'react-native-vector-icons/AntDesign';
 
 
+const Tab = createBottomTabNavigator();
 
-const Stack = createNativeStackNavigator();
+const YOURLOCATIONS = "Locations";
+const LOCATION = "Add Location";
+const MAP = "Map view";
+const icons = {
+  [YOURLOCATIONS]: 'book',
+  [LOCATION]: 'form',
+  [MAP]: 'enviromento'
+}
 
 export default function App() {
   return (
     <NavigationContainer>
-      <Stack.Navigator screenOptions={{headerStyle: {backgroundColor: '#8a6fdf'}}}>
-        {/*<Stack.Screen name={'Locations'} component={Locations}/>*/}
-        {/*<Stack.Screen name={'Add Location'} component={AddLocation}/>*/}
-        <Stack.Screen name={'Map view'} component={ViewMap}/>
-      </Stack.Navigator>
+      <Tab.Navigator 
+      screenOptions={{
+        headerStyle: {backgroundColor: '#8a6fdf'},
+        tabBarStyle: {height: 60},
+        tabBarLabelStyle: {fontSize: 11}
+      }}>
+          <Tab.Screen 
+          name={YOURLOCATIONS} 
+          component={Locations}
+          options={{tabBarIcon: ()=> <AntDesign name={icons[YOURLOCATIONS]} size={21}/>}}
+          />
+          <Tab.Screen
+            name={LOCATION}
+            component={AddLocation}
+            options={{tabBarIcon: ()=> <AntDesign name={icons[LOCATION]} size={21}/>}}
+            />
+          <Tab.Screen
+            name={MAP}
+            component={ViewMap}
+            options={{tabBarIcon: ()=> <AntDesign name={icons[MAP]} size={21}/>}}
+            />
+        </Tab.Navigator>
     </NavigationContainer>
   );
 } 
+

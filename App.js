@@ -26,7 +26,7 @@ export default function App() {
     <NavigationContainer>
       <Tab.Navigator 
       screenOptions={{
-        headerStyle: {backgroundColor: '#8a6fdf'},
+        headerStyle: {backgroundColor: '#ffff'},
         tabBarStyle: {height: 60},
         tabBarLabelStyle: {fontSize: 11}
       }}>
@@ -49,4 +49,5 @@ export default function App() {
     </NavigationContainer>
   );
 } 
+
 

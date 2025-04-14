@@ -1,46 +1,53 @@
-import { View, Text, TextInput,StyleSheet } from "react-native";
+import { View, TextInput,StyleSheet } from "react-native";
 import { useState } from 'react';
 import { Button } from 'react-native-paper';
 import StarRating from 'react-native-star-rating-widget';
-
+import { addLocationToFirestore } from '../firebase/firestoreController';
 
 export function AddLocation({navigation}){
-    return(
-        <View>
-            <Form navigation={navigation}></Form>
-        </View>
-    )
+  return(
+    <View>
+      <Form navigation={navigation}/>
+    </View>
+  )
 }
-    function Form({navigation}){
-    
-    const [cityName, setCityName] = useState('')
-    const [stars, setStars] = useState(0)
-    const [description, setDescription] = useState('')
+
+function Form({navigation}){
+
+  const [cityName, setCityName] = useState('')
+  const [rating, setRating] = useState(0)
+  const [description, setDescription] = useState('')
 
 
-    return (
-        <View style={styles.card}>
-         <TextInput
-            style={styles.input}
-            onChangeText={setCityName}
-            value={cityName}
-            placeholder="Name"/>
-          <TextInput
-            style={styles.input}
-            onChangeText={setDescription}
-            value={description}
-            placeholder="Description"/>
-          <StarRating
-            style={styles.starrating}
-            rating={stars}
-            onChange={setStars}/>
-          <Button
-            style={styles.button}
-            mode='contained'>Add</Button>
-        </View>
-    )
+  const handleSubmit = async () => {
+    await addLocationToFirestore(cityName, description, rating);
+    navigation.navigate('My Added Locations');
 }
-    
+
+  return (
+    <View style={styles.card}>
+      <TextInput
+        style={styles.input}
+        onChangeText={setCityName}
+        value={cityName}
+        placeholder="Name"/>
+      <TextInput
+        style={styles.input}
+        onChangeText={setDescription}
+        value={description}
+        placeholder="Description"/>
+      <StarRating
+        style={styles.starrating}
+        rating={rating}
+        onChange={setRating}/>
+      <Button
+        style={styles.button}
+        mode='contained'
+        onPress={handleSubmit}>Add</Button>
+    </View>
+  )
+}
+
 const styles = StyleSheet.create({
     card: {
         backgroundColor: '#d6e1e9',       

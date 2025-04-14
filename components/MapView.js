@@ -1,73 +1,87 @@
-import { StyleSheet } from 'react-native';
-import { useEffect, useState } from 'react';
+import { View, Text, StyleSheet } from 'react-native';
+import { useState, useCallback } from 'react';
 import * as Location from 'expo-location';
-import { SafeAreaView } from 'react-native-safe-area-context';
 import MapView, { Marker } from 'react-native-maps';
-import { Button, TextInput } from 'react-native-paper';
+import { useFocusEffect } from '@react-navigation/native';
 
+let selectedPlace = '';
 
+export const setSelectedPlace=(place) => {
+  selectedPlace = place;
+}
+export const getSelectedPlace = () => selectedPlace;
 
+export function ViewMap() {
+  const [location, setLocation] = useState(null);
+  const [place, setPlace] = useState('');
+  const [errorMsg, setErrorMsg] = useState(null);
 
-export function ViewMap({}) {
-  
-    const [loc, setLoc] = useState({lat: 65.0800, lon: 25.4800});
-    const [place, setPlace] = useState('');
-  
-    useEffect(()=>{
-      getLocation();
-      async function getLocation(){
-        let {status} = await Location.requestForegroundPermissionsAsync();
-        if (status !== 'granted'){
-          console.log('No permission granted');
-          return;
+  useFocusEffect(
+    useCallback(() => {
+      const selected = getSelectedPlace();
+
+      setPlace(selected);
+
+      const fetchCoordinates = async () => {
+        try {
+          const geocodedLocation = await Location.geocodeAsync(selected);
+          if (geocodedLocation.length > 0) {
+            setLocation(geocodedLocation[0]);
+            setErrorMsg(null);
+          } else {
+            setErrorMsg('Location not found');
+          }
+        } catch (error) {
+          setErrorMsg('Error getting location');
         }
-  
-        const location = await Location.getCurrentPositionAsync({accuray: Location.Accuracy.Lowest})
-        setLoc({lat: location.coords.latitude, lon: location.coords.longitude})
       }
-    }, []);
-  
-    async function search(){
-      let coords = await Location.geocodeAsync(place);
-      if(coords[0]){
-        setLoc({lat: coords[0].latitude, lon: coords[0].longitude})
-      }else{
-        Alert.alert('Location not found!')
-      }
-    }
-  
+
+      fetchCoordinates();
+    }, [])
+  )
+
+  if (errorMsg) {
     return (
-      <SafeAreaView style={styles.container}>
-        <TextInput value={place} onChangeText={setPlace}/>
-        <Button onPress={search}>Search</Button>
-        <MapView
-          style={styles.map}
-          region={{
-            latitude: loc?.lat,
-            longitude: loc?.lon,
-            latitudeDelta: 0.0922,
-            longitudeDelta: 0.0421
-          }}
-        >
-        { place !== '' &&
-          <Marker
-          title={place}
-          coordinate={{latitude: loc.lat, longitude: loc.lon}}
-          />
-        }
-  
-        </MapView>
-      </SafeAreaView>
-    )
+      <View>
+        <Text>{errorMsg}</Text>
+      </View>
+    );
   }
-  
-  const styles = StyleSheet.create({
-    container: {
-      flex: 1,
-      backgroundColor: '#fff',
-    },
-    map: {
-      width: '100%',
-      height: '100%'   
-    }
-  });
+
+  if (!location) {
+    return (
+      <View>
+        <Text>{place || '...'}...</Text>
+      </View>
+    );
+  }
+
+  return (
+    <MapView
+      style={styles.map}
+      region={{
+        latitude: location.latitude,
+        longitude: location.longitude,
+        latitudeDelta: 0.05,
+        longitudeDelta: 0.05,
+      }}
+    >
+      <Marker
+        coordinate={{
+          latitude: location.latitude,
+          longitude: location.longitude,
+        }}
+        title={place}/>
+    </MapView>
+  )
+}
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1
+  },
+  map: {
+    width: '100%',
+    height: '100%'   
+  }
+});

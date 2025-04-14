@@ -1,14 +1,25 @@
-import { collection, addDoc} from 'firebase/firestore'
+import { collection, addDoc, getDocs } from 'firebase/firestore'
 import { db, LOCATIONS_REF } from './Config'
 
-export const MoveLocation =async (cityName, description, stars)=>{
-  try{
+export async function addLocationToFirestore(cityName, description, stars){
+  try {
     await addDoc(collection(db, LOCATIONS_REF), {
-      areaName: cityName,
-      areaDesc: description,
-      rating: stars
+      cityName,
+      description,
+      stars
     })
-  }catch (error) {
+  } catch (error) {
   }
 }
 
+export async function fetchLocationsFromFirestore() {
+  try {
+    const snapshot = await getDocs(collection(db, LOCATIONS_REF))
+    return snapshot.docs.map(doc=>({
+      id: doc.id,
+      ...doc.data()
+    }))
+  } catch (error) {
+    return [];
+  }
+}
